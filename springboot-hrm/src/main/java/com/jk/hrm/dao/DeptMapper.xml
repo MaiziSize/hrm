@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.hrm.dao.DeptMapper">
+
+	<select id="find" parameterType="hashmap" resultType="com.jk.hrm.bean.Dept">
+   		select *from hrm_dept
+	</select>
+	<insert id="save" parameterType="com.jk.hrm.bean.Dept" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert  into  hrm_dept (name,remark) values (#{name},#{remark})
+	</insert>
+	<delete id="delete" parameterType="com.jk.hrm.bean.Dept">
+		delete from hrm_dept where id=#{id}
+	</delete>
+	<select id="get" resultType="com.jk.hrm.bean.Dept">
+		select * from hrm_dept where id = #{id}
+	</select>
+	<update id="update" parameterType="com.jk.hrm.bean.Dept">
+		update hrm_dept set name=#{name},remark=#{remark} where id = #{id}
+	</update>
+	<select id="findByPage" parameterType="hashmap" resultType="com.jk.hrm.bean.Dept">
+		select * from hrm_dept order by id asc
+	</select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.hrm.dao.JobMapper">
+
+	<insert id="save" parameterType="com.jk.hrm.bean.Job" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into hrm_job (id,name,remark) values (#{id},#{name},#{remark})
+	</insert>
+	<select id="find" parameterType="hashmap" resultType="com.jk.hrm.bean.Job">
+		select * from hrm_job
+	</select>
+	<delete id="delete" parameterType="com.jk.hrm.bean.Job">
+		delete from hrm_job where id=#{id}
+	</delete>
+
+	<select id="get" resultType="com.jk.hrm.bean.Job">
+		select * from hrm_job where id=#{id}
+	</select>
+
+	<update id="update" parameterType="com.jk.hrm.bean.Job">
+		update hrm_job set name=#{name},remark=#{remark} where id=#{id}
+	</update>
+
+	<select id="findByPage" resultType="com.jk.hrm.bean.Job" parameterType="hashmap">
+		select * from hrm_job order by id asc;
+	</select>
+</mapper>

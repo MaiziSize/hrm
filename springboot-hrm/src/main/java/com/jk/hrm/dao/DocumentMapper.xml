@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.hrm.dao.DocumentMapper">
+    <resultMap id="documentMapResult" type="Document">
+        <!--根据user_id关联查询user-->
+        <association property="user" javaType="com.jk.hrm.bean.User" column="userid"
+                     select="com.jk.hrm.dao.UserMapper.get"></association>
+    </resultMap>
+	<insert id="save" parameterType="document" useGeneratedKeys="true" keyProperty="id">
+		insert into hrm_document (title,url,remark,createDate,userid)
+		values (#{title},#{url},#{remark},#{createDate},#{user.id})
+	</insert>
+
+	<select id="findByPage" parameterType="hashmap" resultMap="documentMapResult">
+		select * from hrm_document
+	</select>
+	<select id="get"  resultType="com.jk.hrm.bean.Document">
+     select * from hrm_document where id = #{user.id}
+    </select>
+
+	<delete	id="delete" parameterType="document">
+		delete from hrm_document where id = #{id}
+	</delete>
+
+	<update id="update" parameterType="document" >
+		update hrm_document set title=#{title},url=#{url},remark=#{remark}
+	</update>
+
+	<select id="selectDocument" parameterType="document" resultType="document">
+		select * from hrm_document where title like  "%"#{title}"%"
+	</select>
+</mapper>

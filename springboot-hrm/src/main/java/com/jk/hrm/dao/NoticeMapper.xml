@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.hrm.dao.NoticeMapper">
+
+	<resultMap id="NoticeMapResult" type="Notice" autoMapping="true">
+		<!--根据user_id关联查询user-->
+		<association property="user" javaType="com.jk.hrm.bean.User" column="n_userId"
+					 select="com.jk.hrm.dao.UserMapper.get"></association>
+	</resultMap>
+
+	<insert id="save" parameterType="Notice" useGeneratedKeys="true" keyProperty="id">
+		insert into hrm_notice (title,content,createDate,userId)
+		values (#{title},#{content},#{createDate},#{user.id})
+	</insert>
+
+	<select id="findByPage" parameterType="hashmap" resultMap="NoticeMapResult">
+		select * from hrm_notice
+	</select>
+
+	<select id="get" resultMap="NoticeMapResult">
+		select * from hrm_notice where id=#{id}
+	</select>
+
+	<update id="update" parameterType="Notice">
+		update hrm_notice set title=#{title},content=#{content} where id=#{id}
+	</update>
+	<delete id="delete" parameterType="Notice">
+	 	delete from hrm_notice where id = #{id}
+	</delete>
+
+	<select id="get1" resultMap="NoticeMapResult">
+		select content from hrm_notice where id=#{id}
+	</select>
+
+	<select id="selectNotice" parameterType="notice" resultType="notice">
+		select * from hrm_notice where title like  "%"#{title}"%"
+	</select>
+</mapper>

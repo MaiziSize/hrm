@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jk.hrm.dao.EmployeeMapper">
+    <resultMap id="EmployeeMap" type="com.jk.hrm.bean.Employee">
+		<association property="dept" javaType="com.jk.hrm.bean.Dept" column="deptId"
+			select="com.jk.hrm.dao.DeptMapper.get"></association>
+		<association property="job" javaType="com.jk.hrm.bean.Job" column="jobId"
+					 select="com.jk.hrm.dao.JobMapper.get"></association>
+	</resultMap>
+
+	<select id="find" parameterType="hashmap" resultMap="EmployeeMap">
+		select * from hrm_employee
+	</select>
+
+	<insert id="save" parameterType="com.jk.hrm.bean.Employee" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into hrm_employee
+		(deptId,jobId,name,cardId,address,postCode,tel,phone,qqNum,email,sex,party,birthday,race,education,speciality,picture,hobby,remark,createDate)
+		values (#{dept.id},#{job.id},#{name},#{cardId},#{address},#{postCode},#{tel},#{phone},#{qqNum},
+		#{email},#{sex},#{party},#{birthday},#{race},#{education},#{speciality},#{picture},#{hobby},#{remark},#{createDate})
+	</insert>
+
+	<delete id="delete" parameterType="com.jk.hrm.bean.Employee">
+		delete from hrm_employee where id=#{id}
+	</delete>
+
+	<select id="get" resultMap="EmployeeMap" parameterType="Employee">
+		select * from hrm_employee where id=#{employee.id}
+	</select>
+
+	<update id="update" parameterType="Employee">
+		update hrm_employee set deptId=#{dept.id},jobId=#{job.id},name=#{name},cardId=#{cardId},address=#{address}
+		 ,postCode=#{postCode},tel=#{tel},phone=#{phone},qqNum=#{qqNum},sex=#{sex},party=#{party},birthday=#{birthday}
+		 ,race=#{race},education=#{education},speciality=#{speciality},picture=#{picture},hobby=#{hobby},remark=#{remark},createDate=#{createDate}
+		 where id=#{id}
+	</update>
+	
+	<select id="findByPage" parameterType="employeeInfo" resultType="employeeInfo">
+	  	select e.id,e.name,e.sex,e.phone,e.email,j.name as jobName,
+	  	e.education,e.cardId,d.name as deptName,e.address,e.createDate  from hrm_employee as e
+	  	inner join hrm_dept AS d on (e.deptId=d.id)
+	  	inner join hrm_job AS j on (e.jobId=j.id)
+	  	<where>
+			<if test="jobId != null">
+				e.jobId=#{job.id}
+			</if>
+			<if test="deptId != null">
+				and e.deptId=#{dept.id}
+			</if>
+			<if test="name != null">
+				and e.name like #{name}
+			</if>
+			<if test="cardId != null">
+				and e.cardId like #{cardId}
+			</if>
+			<if test="sex != null">
+				and e.sex=#{sex}
+			</if>
+			<if test="phone != null">
+				and e.phone like #{phone}
+			</if>
+		</where>
+		order by e.id ASC
+	</select>
+	<!--<select id="selectEmp" parameterType="Employee" resultMap="EmployeeMap">-->
+	<!--select * from hrm_employee where name like "%"#{name}"%" and phone like "%"#{phone}"%" and  cardId like "%"#{cardId}"%"-->
+	<!--and sex like "%"#{sex=}"%"-->
+
+	<!--</select>-->
+	<select id="selectEmp" parameterType="Employee" resultMap="EmployeeMap">
+		select * from hrm_employee as e
+		inner join hrm_dept AS d on (e.deptId=d.id)
+		inner join hrm_job AS j on (e.jobId=j.id)
+		<where>
+			<if test="jobId != null">
+				jobId = #{job.id}
+			</if>
+			<if test="sex != null">
+				and e.sex=#{sex}
+			</if>
+			<if test="name != null">
+				and e.name like "%"#{name}"%"
+			</if>
+			<if test="phone != null">
+				and e.phone like "%"#{phone}"%"
+			</if>
+			<if test="cardId != null">
+				and e.cardId like "%"#{cardId}"%"
+			</if>
+		<!--	<if test="deptId != null">
+				and e.deptId=#{deptId}
+			</if>-->
+		</where>
+		order by e.id ASC
+	</select>
+
+</mapper>
